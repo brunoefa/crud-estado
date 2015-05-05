@@ -3,7 +3,9 @@ package br.com.senai.cadastroestado;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -77,7 +79,7 @@ public class ListagemActivity extends ListActivity {
 		if (id == R.id.action_editar) {
 			editarItem(this.itemEstado);
 		} else if (id == R.id.action_excluir) {
-			excluirItem(this.itemEstado);
+			confirmarExclusao();
 		}
 		return super.onContextItemSelected(item);
 	}
@@ -90,10 +92,27 @@ public class ListagemActivity extends ListActivity {
 		startActivity(intent);
 	}
 	
-	private void excluirItem(String itemEstado) {
-		listaEstados.remove(itemEstado);
-		carregaLista();
+	private void excluirItem() {
+		listaEstados.remove(this.itemEstado);
+		mostrarMensagem("Item removido com sucesso");
 	}
+	
+	private void confirmarExclusao() {
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setTitle("Tem certeza que deseja excluir?");
+		alert.setNegativeButton("Não", null);
+		alert.setPositiveButton("Sim", 
+			new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					excluirItem();
+					carregaLista();
+				}
+			}
+		);
+		alert.show();
+	}
+	
 
 	private void cadastrarItem() {
 		Intent intent = new Intent(this, FormularioActivity.class);

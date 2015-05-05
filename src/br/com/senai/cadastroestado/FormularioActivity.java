@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class FormularioActivity extends Activity {
 
@@ -57,6 +58,7 @@ public class FormularioActivity extends Activity {
 			listaEstados.remove(this.item);
 		}
 		listaEstados.add(estado);
+		mostrarMensagem("Estado salvo com sucesso!");
 		listarEstadosCadastrados();
 	}
 
@@ -73,5 +75,9 @@ public class FormularioActivity extends Activity {
 			listarEstadosCadastrados();
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	private void mostrarMensagem(String m) {
+		Toast.makeText(this, m, Toast.LENGTH_LONG).show();
 	}
 }
