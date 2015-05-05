@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CadastroActivity"
+            android:name=".FormularioActivity"
             android:label="@string/title_activity_cadastro" >
         </activity>
     </application>

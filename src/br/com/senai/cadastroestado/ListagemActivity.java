@@ -12,13 +12,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 public class ListagemActivity extends ListActivity {
+	
+	private String itemEstado = "";
+	protected static final String ACAO_CADASTRAR = "cadastrar";
+	protected static final String ACAO_EDITAR = "editar";
 
 	private ArrayList<String> listaEstados = new ArrayList<String>(
 			Arrays.asList("Acre (AC)", "Alagoas (AL)", "Amapá (AP)",
@@ -51,16 +53,13 @@ public class ListagemActivity extends ListActivity {
 	private void carregaLista() {
 		ArrayAdapter<String> listaAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listaEstados);
 		this.setListAdapter(listaAdapter);
-
-		ListView lv = getListView();
-
-		lv.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				registerForContextMenu(view);
-				view.showContextMenu();
-			}
-		});
+	}
+	
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		this.itemEstado = (String)l.getItemAtPosition(position);
+		registerForContextMenu(v);
+		v.showContextMenu();
 	}
 
 	@Override
@@ -76,31 +75,50 @@ public class ListagemActivity extends ListActivity {
 	public boolean onContextItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.action_editar) {
-			Toast.makeText(this, "Editar", Toast.LENGTH_LONG).show();
+			editarItem(this.itemEstado);
 		} else if (id == R.id.action_excluir) {
-			Toast.makeText(this, "Excluir", Toast.LENGTH_LONG).show();
+			excluirItem(this.itemEstado);
 		}
 		return super.onContextItemSelected(item);
 	}
+	
+	private void editarItem(String itemEstado) {
+		Intent intent = new Intent(this, FormularioActivity.class);
+		intent.putStringArrayListExtra("listaEstados", listaEstados);
+		intent.putExtra("itemEstado", itemEstado);
+		intent.putExtra("acao", ACAO_EDITAR);
+		startActivity(intent);
+	}
+	
+	private void excluirItem(String itemEstado) {
+		listaEstados.remove(itemEstado);
+		carregaLista();
+	}
 
+	private void cadastrarItem() {
+		Intent intent = new Intent(this, FormularioActivity.class);
+		intent.putStringArrayListExtra("listaEstados", listaEstados);
+		intent.putExtra("acao", ACAO_CADASTRAR);
+		startActivity(intent);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.listagem, menu);
 		return true;
 	}
 
-	private void cadastrarNovoEstado() {
-		Intent intent = new Intent(this, CadastroActivity.class);
-		intent.putStringArrayListExtra("listaEstados", listaEstados);
-		startActivity(intent);
-	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.action_novo_estado) {
-			cadastrarNovoEstado();
+			cadastrarItem();
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	private void mostrarMensagem(String m) {
+		Toast.makeText(this, m, Toast.LENGTH_LONG).show();
 	}
 }
