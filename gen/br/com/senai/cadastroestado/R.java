@@ -28,6 +28,7 @@ public final class R {
         public static final int LinearLayout1=0x7f080000;
         public static final int action_editar=0x7f080004;
         public static final int action_excluir=0x7f080005;
+        public static final int action_excluir_selecionados=0x7f080008;
         public static final int action_novo_estado=0x7f080007;
         public static final int action_voltar=0x7f080006;
         public static final int btn_cadastrar=0x7f080003;
